@@ -5,8 +5,8 @@ To collaboratively assemble and configure a fully functional quadcopter with GPS
   - This task will help me to learn how a quadcopter done is really built.
   - And also with the help of this task I will learn the assmebly of each components which are required for quadcopter,
   - And overall this task became bridge between level 2 and level 3 task.
-
-**##### QUADCOPTER ASSEMBLY, CONFIGURATION AND OBSTACLE DETECTION**
+  
+  ##### **QUADCOPTER ASSEMBLY, CONFIGURATION AND OBSTACLE DETECTION**
 
 ##### **1. Quadcopter Assembly**
 
@@ -104,9 +104,8 @@ An ultrasonic sensor uses sound waves to measure distance. It sends an ultrasoni
 
 The approximate distance is calculated using:
 
-\[
-d = \frac{v \times t}{2}
-\]
+
+d = (v*t)/2
 
 Where:
 
@@ -133,21 +132,10 @@ The basic working procedure is:
 5. Trigger the programmed response when an obstacle is detected.
 6. Continue normal operation when the path is clear.
 
-For example, a threshold of 1.5 metres can be used for an initial experiment.
 
-```python
-obstacle_threshold = 1.5  # metres
-
-def detect_obstacle(distance):
-    if distance is None or distance < 0:
-        return "SENSOR_ERROR"
-
-    if distance < obstacle_threshold:
-        return "OBSTACLE_DETECTED"
-
-    return "PATH_CLEAR"
 
 **7.1 Obstacle Response**
+
 When an obstacle is detected within the predefined threshold, the system can trigger a response such as stopping forward movement or requesting a change in the commanded flight path.
 
 The response must be implemented through a suitable flight-controller interface and tested before use. A single distance sensor cannot detect obstacles in every direction, and the drone may continue moving because of momentum or drift.
@@ -155,6 +143,7 @@ The response must be implemented through a suitable flight-controller interface 
 Therefore, the detection script must be integrated with appropriate flight-control logic and safety mechanisms to provide a reliable response.
 
 **8. Testing and Validation**
+
 Testing is performed to verify that each component and software function operates correctly.
 
 The main testing activities include:
@@ -167,6 +156,9 @@ The main testing activities include:
 - Obstacle detection testing: Checking the script with clear-path, obstacle, and invalid-measurement scenarios.
 The obstacle detection logic should first be tested using simulated or recorded sensor readings, followed by software-in-the-loop simulation. Physical flight testing should only be considered after the hardware, failsafes, and control response have been verified.
   
+
+  
+
 
 # **TASK 2 : Autonomous Flight Planning & Execution**
 ##### **OBJECTIVE :**
@@ -443,6 +435,8 @@ To explore the methodology behind air crash investigations and learn how aviatio
 * **Determinism & Performance:** Enhanced real-time capability suitable for safety-critical robotic applications.
 
 [click here](https://github.com/sujan935/Sujana_report_pdf/blob/main/ROS2_Report%20.pdf) to view complete docuementaion of task 7.
+
+# THANK YOU 
   
 
 
