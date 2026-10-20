@@ -5,10 +5,168 @@ To collaboratively assemble and configure a fully functional quadcopter with GPS
   - This task will help me to learn how a quadcopter done is really built.
   - And also with the help of this task I will learn the assmebly of each components which are required for quadcopter,
   - And overall this task became bridge between level 2 and level 3 task.
-  
 
-  
+**##### QUADCOPTER ASSEMBLY, CONFIGURATION AND OBSTACLE DETECTION**
 
+##### **1. Quadcopter Assembly**
+
+A quadcopter is an unmanned aerial vehicle (UAV) that uses four motors and propellers to fly and control its movement. The first step is to assemble the frame and install all the required components.
+
+The main components include the frame, four brushless motors, Electronic Speed Controllers (ESCs), flight controller, power distribution system, battery, receiver, and GPS module.
+
+- **Frame:** Supports and holds all the drone components.
+- **Brushless motors:** Rotate the propellers to generate lift.
+- **ESCs:** Control the speed of the motors based on commands from the flight controller.
+- **Flight controller:** Acts as the brain of the drone by processing sensor data and controlling the motors.
+- **Battery and power system:** Supply electrical power to the drone.
+
+After assembly, the wiring, component mounting, motor connections, and power supply are checked to ensure proper operation.
+
+##### **2. Binding the RadioMaster TX16S Transmitter with the RP1 Receiver**
+
+The RadioMaster TX16S transmitter is used by the pilot to control the drone, while the RP1 receiver receives the commands wirelessly and passes them to the flight controller.
+
+The TX16S and RP1 must be configured with compatible ExpressLRS settings and firmware. After binding, the receiver is connected to the appropriate flight-controller interface, typically using a UART connection and the CRSF protocol.
+
+The radio inputs are then checked in Mission Planner to verify that the throttle, roll, pitch, and yaw commands are received correctly.
+
+- **Throttle:** Controls the requested thrust.
+- **Roll:** Tilts the drone left or right.
+- **Pitch:** Tilts the drone forward or backward.
+- **Yaw:** Rotates the drone around its vertical axis.
+
+Radio failsafe settings must also be configured so that the drone can respond appropriately if communication with the transmitter is lost.
+
+##### **3. Interfacing Mission Planner with the Flight Controller**
+
+Mission Planner is a ground control station used to configure, monitor, and test drones running ArduPilot firmware.
+
+The flight controller is connected to a computer using a USB data cable. After selecting the correct communication port, Mission Planner establishes communication with the flight controller.
+
+The main functions of Mission Planner include:
+
+- Configuring flight-controller parameters.
+- Calibrating sensors and radio inputs.
+- Monitoring GPS information and vehicle status.
+- Configuring flight modes and safety settings.
+- Identifying errors through status messages and diagnostic information.
+
+This connection helps verify that the flight controller is functioning correctly before flight testing.
+
+##### **4. GPS Module Connection and Configuration**
+
+The GPS module helps the drone determine its geographical position and provides information used by navigation functions. Depending on the module, it may also provide ground-speed information and include a compass.
+
+The GPS module is connected to the appropriate GPS port or serial interface on the flight controller. Its power supply, wiring, communication protocol, and configuration are verified.
+
+After connecting the module, the following checks are performed:
+
+1. Confirm that the flight controller detects the GPS module.
+2. Verify that satellite information is received.
+3. Check whether the reported position is valid.
+4. Test the GPS outdoors in an open area with a clear view of the sky.
+
+GPS supports navigation functions such as position hold and waypoint navigation when the flight controller, firmware, and other required sensors are configured correctly.
+
+###### **5. Sensor Calibration**
+
+Sensor calibration ensures that the flight controller receives reliable measurements and correctly interprets the drone's orientation and the pilot's commands.
+
+ **5.1 Accelerometer Calibration**
+
+The accelerometer measures acceleration and helps the flight controller estimate the drone's orientation relative to gravity. Calibration is performed by placing the drone in the positions specified by Mission Planner.
+
+Correct calibration helps the flight controller estimate the drone's attitude and maintain stable flight.
+
+ **5.2 Compass Calibration**
+
+The compass measures the Earth's magnetic field and helps determine the drone's heading. Calibration is performed by rotating the drone through the required orientations according to the software instructions.
+
+Calibration should be performed away from magnetic interference, metal objects, and other sources that may affect compass readings.
+
+ **5.3 Radio Calibration**
+
+Radio calibration ensures that the flight controller correctly interprets commands from the transmitter. Each control stick is moved through its full range, and the corresponding channel values are checked.
+
+This process verifies the control ranges, channel assignments, and directions. Failsafe settings are also checked to ensure appropriate behavior if the radio signal is lost.
+
+##### **6. Integration of LiDAR or Ultrasonic Sensor**
+
+A LiDAR or ultrasonic sensor can be integrated into the drone to measure the distance between the drone and nearby objects. These measurements can be used as inputs to an obstacle detection system.
+
+ **6.1 LiDAR Sensor**
+
+LiDAR uses light, typically laser pulses, to estimate the distance to an object. Depending on the model, it can provide accurate distance measurements and may be suitable for longer-range applications.
+
+ **6.2 Ultrasonic Sensor**
+
+An ultrasonic sensor uses sound waves to measure distance. It sends an ultrasonic pulse and measures the time taken for the reflected sound wave to return.
+
+The approximate distance is calculated using:
+
+\[
+d = \frac{v \times t}{2}
+\]
+
+Where:
+
+- `d` is the distance to the object.
+- `v` is the speed of sound.
+- `t` is the total time taken for the sound wave to travel to the object and return.
+
+**6.3 Sensor Interfacing**
+
+The sensor is connected to a compatible flight-controller interface according to its specifications. A LiDAR sensor may use UART or another supported interface, while an ultrasonic sensor may require trigger and echo signals.
+
+The electrical voltage levels, communication settings, and sensor configuration must be verified. Once connected, the measured distance is checked using Mission Planner or suitable diagnostic tools.
+
+##### **7. Development of a Basic Obstacle Detection Script**
+
+The purpose of the obstacle detection script is to process distance measurements and identify when an object is too close to the drone.
+
+The basic working procedure is:
+
+1. Read the distance measured by the sensor.
+2. Check whether the measurement is valid.
+3. Compare the distance with a predefined threshold.
+4. Identify whether an obstacle is within the threshold.
+5. Trigger the programmed response when an obstacle is detected.
+6. Continue normal operation when the path is clear.
+
+For example, a threshold of 1.5 metres can be used for an initial experiment.
+
+```python
+obstacle_threshold = 1.5  # metres
+
+def detect_obstacle(distance):
+    if distance is None or distance < 0:
+        return "SENSOR_ERROR"
+
+    if distance < obstacle_threshold:
+        return "OBSTACLE_DETECTED"
+
+    return "PATH_CLEAR"
+
+**7.1 Obstacle Response**
+When an obstacle is detected within the predefined threshold, the system can trigger a response such as stopping forward movement or requesting a change in the commanded flight path.
+
+The response must be implemented through a suitable flight-controller interface and tested before use. A single distance sensor cannot detect obstacles in every direction, and the drone may continue moving because of momentum or drift.
+
+Therefore, the detection script must be integrated with appropriate flight-control logic and safety mechanisms to provide a reliable response.
+
+**8. Testing and Validation**
+Testing is performed to verify that each component and software function operates correctly.
+
+The main testing activities include:
+- Hardware testing: Checking the frame, motor connections, ESCs, wiring, and power supply.
+- Radio testing: Verifying transmitter-receiver binding and correct reception of control inputs.
+- Mission Planner testing: Confirming USB communication and checking the flight-controller status.
+- GPS testing: Verifying GPS detection and valid positioning information.
+- Calibration testing: Checking the accelerometer, compass, and radio calibration results.
+- Distance sensor testing: Comparing sensor readings with known distances.
+- Obstacle detection testing: Checking the script with clear-path, obstacle, and invalid-measurement scenarios.
+The obstacle detection logic should first be tested using simulated or recorded sensor readings, followed by software-in-the-loop simulation. Physical flight testing should only be considered after the hardware, failsafes, and control response have been verified.
+  
 
 # **TASK 2 : Autonomous Flight Planning & Execution**
 ##### **OBJECTIVE :**
